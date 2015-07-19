@@ -24,7 +24,7 @@ io.on('connection', function (socket) {
 
   //Update the state
   socket.on('update touch', function(touchevent){
-
+    console.log('update touch for ' +  socket.id);
     io.emit('update state', socket.id, touchevent);
   });
 
