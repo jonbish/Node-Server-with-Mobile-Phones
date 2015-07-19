@@ -20,9 +20,8 @@
 <script src="/socket.io/socket.io.js"></script>
 
 <script language="javascript" type="text/javascript">
-  var roomId = "test";
   var socket = io.connect(baseURL+":8080");
-  var roomURL = baseURL+":8080/mobile.html?id="+roomId;
+  var roomURL = baseURL+":8080/mobile.html";
   // socket.emit('new room', { room: roomId});
 
   $('#gameLink').attr("href", roomURL).text(roomURL);
