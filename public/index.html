@@ -26,11 +26,19 @@
 
   $('#gameLink').attr("href", roomURL).text(roomURL);
 
+  //When a a new main device is connected
+  socket.emit('connect desktop');
+
+  socket.on('update desktop', function(playersArray){
+      console.log('update desktop: ' + playersArray);
+      players = playersArray;
+  });
 
   socket.on('add user', function(socketID){
       $('#status').text(players.length + ' players');
       console.log('New Player: ' + socketID);
       players.push(new player(socketID));
+      sync();
   });
 
   socket.on('remove user', function(socketID){
@@ -41,6 +49,7 @@
         }
       }
       if(destroyThis !== null){ players.splice(destroyThis, 1);}
+      sync();
   });
 
   socket.on('update state', function(socketId, touchevent){
@@ -54,6 +63,7 @@
 
     if(player !== null){
       player.color = player.colors[Math.floor(Math.random()*player.colors.length)];
+      sync();
     }
   });
 
@@ -105,7 +115,9 @@
     }
   });
 
-
+  function sync() {
+    socket.emit('update players', players);
+  }
 
   function update() {
     for(var i in players){      

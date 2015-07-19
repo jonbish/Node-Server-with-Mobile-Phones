@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var players = [];
 
 app.use(express.static('public'));
 server.listen(8080);
@@ -13,6 +14,16 @@ io.on('connection', function (socket) {
   socket.on("connect mobile", function(){
     console.log('Someone entered :' + socket.id);
     socket.broadcast.emit('add user', socket.id);
+  });
+
+  socket.on("connect desktop", function(data){
+    console.log('update desktop');
+    socket.broadcast.emit('update desktop', players);
+  });
+
+  socket.on("update players", function(playersArray){
+    console.log('update players');
+    players = playersArray;
   });
 
   //Update the position
@@ -30,5 +41,6 @@ io.on('connection', function (socket) {
   //When a user disconnects
   socket.on("disconnect", function(data){
     console.log('Someone left :' + data);
+    socket.broadcast.emit('remove user', socket.id);
   });
 });
