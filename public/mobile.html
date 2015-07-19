@@ -20,12 +20,13 @@
   <div id="wrapper">
     <h1 id="join">Device Input/Sensor Test</h1>
     <div id="touchpad"></div>
-    <p class='orientation'></p>
-    <p class="battery"></p>
-    <p class="devicelight"></p>
-    <p class="lightLevel"></p>
-    <p class="deviceproximity"></p>
-    <p class="userproximity"></p>
+    <p>orientation: <span class='orientation'></span></p>
+    <p>geolocation: <span class='geolocation'></span></p>
+    <p>battery: <span class="battery"></span></p>
+    <p>devicelight: <span class="devicelight"></span></p>
+    <p>lightLevel: <span class="lightLevel"></span></p>
+    <p>deviceproximity: <span class="deviceproximity"></span></p>
+    <p>userproximity: <span class="userproximity"></span></p>
     <p></p>
     <p id="error"></p>
 </div>
@@ -50,8 +51,8 @@
 	}
 
 	// Collect device battery information
-	if(typeof navigator.battery !== "undefined" || typeof navigator.webkitBattery !== "undefined"){
-		var battery = navigator.battery || navigator.webkitBattery;
+	var battery = navigator.battery || navigator.webkitBattery;
+	if(typeof battery !== "undefined"){
 
 		battery.addEventListener('chargingchange', updateStatus);  
 		battery.addEventListener('levelchange', updateStatus);
@@ -178,7 +179,7 @@
 			deviceOrientationHandler(tiltLR, tiltFB, dir, motUD);
 			}, false);
 	} else {
-		document.getElementById("error").innerHTML = "Not supported on your device or browser.  Sorry."
+		$("#error").text("Not supported on your device or browser.  Sorry.");
 	}
 
 	//Send updated position data
