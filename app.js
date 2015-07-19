@@ -16,14 +16,14 @@ io.on('connection', function (socket) {
   });
 
   //Update the position
-  socket.on("update movement", function(id, data){
+  socket.on("update movement", function(data){
     console.log('update position for ' +  socket.id);
     socket.broadcast.emit('update position', socket.id, data);
   });
 
   //Update the state
   socket.on('update touch', function(touchevent){
-    console.log('update state for ' +  socket.id);
+    console.log('update state to ' + touchevent + ' for ' +  socket.id);
     socket.broadcast.emit('update state', socket.id, touchevent);
   });
 

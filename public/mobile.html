@@ -64,8 +64,8 @@
 
 	mc.on("pinch rotate panleft panright tap press", function(ev) {
 	    touchpad.textContent += ev.type +" ";
-	    $('h2').text(tiltLR + ' : ' + tiltFB + ' : ' + dir + ' : ' + motionUD);
 	    socket.emit('update touch', ev.type);
+	    console.log('update touch', ev.type);
 	});
 		
 	function init() {
