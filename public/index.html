@@ -7,7 +7,8 @@
 
 </head>
 <body>
-   <p>Navigate to <a id="gameLink" href="http://192.168.2.7:8080/">ERROR</a> with your mobile phone.</p>
+   <p>Navigate to <a id="gameLink" href="http://198.61.194.180:8080/">ERROR</a> with your mobile phone.</p>
+   <p id="#status"></p>
    <div id="wrapper">
    </div>
  </body>
@@ -19,28 +20,30 @@
 <script src="/socket.io/socket.io.js"></script>
 
 <script language="javascript" type="text/javascript">
-  function randomString() {
-    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-    var string_length = 8;
-    var randomstring = '';
-    for (var i=0; i<string_length; i++) {
-      var rnum = Math.floor(Math.random() * chars.length);
-      randomstring += chars.substring(rnum,rnum+1);
-    }
-    return randomstring;
-  }
+  // function randomString() {
+  //   var chars = "0123456789";
+  //   var string_length = 4;
+  //   var randomstring = '';
+  //   for (var i=0; i<string_length; i++) {
+  //     var rnum = Math.floor(Math.random() * chars.length);
+  //     randomstring += chars.substring(rnum,rnum+1);
+  //   }
+  //   return randomstring;
+  // }
 
 
-var roomId = randomString();
-roomId = "test"
-  var socket = io.connect(baseURL);
+  // var roomId = randomString();
+  var roomId = "test";
+  var socket = io.connect(baseURL+":8080");
   var roomURL = baseURL+":8080/mobile.html?id="+roomId;
-  socket.emit('new room', { room: roomId});
+  // socket.emit('new room', { room: roomId});
 
   $('#gameLink').attr("href", roomURL).text(roomURL);
 
 
-  socket.on('add user', function(socketID, data){
+  socket.on('add user', function(socketID){
+      $('#status').text(players.length + ' players');
+      console.log('New Player: ' + socketID);
       players.push(new player(socketID));
   });
 
@@ -63,7 +66,6 @@ roomId = "test"
         player = players[i];
       }
     }
-
 
     if(player !== null){
       var tiltLR = data.tilt_LR;

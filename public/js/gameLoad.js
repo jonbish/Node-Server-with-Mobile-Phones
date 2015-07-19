@@ -1,4 +1,4 @@
-var baseURL = "http://192.168.2.7";
+var baseURL = "http://198.61.194.180";
 
 var CANVAS_WIDTH = window.innerWidth-100;
 var CANVAS_HEIGHT = window.innerHeight-100;
