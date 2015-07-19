@@ -20,19 +20,6 @@
 <script src="/socket.io/socket.io.js"></script>
 
 <script language="javascript" type="text/javascript">
-  // function randomString() {
-  //   var chars = "0123456789";
-  //   var string_length = 4;
-  //   var randomstring = '';
-  //   for (var i=0; i<string_length; i++) {
-  //     var rnum = Math.floor(Math.random() * chars.length);
-  //     randomstring += chars.substring(rnum,rnum+1);
-  //   }
-  //   return randomstring;
-  // }
-
-
-  // var roomId = randomString();
   var roomId = "test";
   var socket = io.connect(baseURL+":8080");
   var roomURL = baseURL+":8080/mobile.html?id="+roomId;
@@ -57,6 +44,19 @@
       if(destroyThis !== null){ players.splice(destroyThis, 1);}
   });
 
+  socket.on('update state', function(socketId, touchevent){
+    var player = null;
+
+    for(var i in players){
+      if(players[i].id == socketId){
+        player = players[i];
+      }
+    }
+
+    if(player !== null){
+      player.color = player.colors[Math.floor(Math.random()*player.colors.length)];
+    }
+  });
 
   socket.on('update position', function(socketId, data){
     var player = null;
