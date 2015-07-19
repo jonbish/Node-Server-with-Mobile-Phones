@@ -18,14 +18,16 @@
 </head>
 <body>
   <div id="wrapper">
-    <h1 id="join">Game is running</h1>
-    <h2></h2>
-    <h3></h3>
-    <h4></h4>
-    <h5></h5>
-    <h6></h6>
-    <p id="error"></p>
+    <h1 id="join">Device Input/Sensor Test</h1>
     <div id="touchpad"></div>
+    <p class='orientation'></p>
+    <p class="battery"></p>
+    <p class="devicelight"></p>
+    <p class="lightLevel"></p>
+    <p class="deviceproximity"></p>
+    <p class="userproximity"></p>
+    <p></p>
+    <p id="error"></p>
 </div>
 </body>
 </html>
@@ -42,12 +44,28 @@
     //When a user connects with a mobile phone
 	socket.emit('connect mobile');
 
+	// Prevent device sleep mode
+	if(typeof document.keepScreenAwake !== "undefined"){
+		document.keepScreenAwake = true;
+	}
+
 	// Collect device battery information
-	if(typeof navigator.battery !== "undefined"){
-		level = navigator.battery.level;
-		$('h6').text(level);
-	    socket.emit('update battery', level);
-	    console.log('update battery', level);
+	if(typeof navigator.battery !== "undefined" || typeof navigator.webkitBattery !== "undefined"){
+		var battery = navigator.battery || navigator.webkitBattery;
+
+		battery.addEventListener('chargingchange', updateStatus);  
+		battery.addEventListener('levelchange', updateStatus);
+
+		function updateStatus() {  
+			var level = battery.level;
+			$('.battery').text('battery:' + level);
+			socket.emit('update battery', level);
+			console.log('update battery', level);
+			if (battery.charging) {
+				console.log('Battery is charging...');
+				socket.emit('update charging', level);
+			}
+		}  
 	}
 
 	// Collect GPS information
@@ -57,7 +75,7 @@
 		    var lat = position.coords.latitude;
 		    var lon = position.coords.longitude;
 
-		    $('h3').text(lat + ' : ' + lon);
+		    $('.geolocation').text(lat + ' : ' + lon);
 		    socket.emit('update gps', {lat: lat, lon:lon});
 		    console.log('update gps', {lat: lat, lon:lon});
 		});
@@ -82,7 +100,17 @@
 	    // Get the ambient light level in lux.
 	    var lightLevel = event.value;
 
-	    $('h4').text('lightLevel : ' + lon);
+	    $('.devicelight').text('devicelight : ' + lon);
+	    socket.emit('update devicelight', lightLevel);
+	    console.log('update devicelight', lightLevel);
+	});
+
+	// Collect device light information
+	window.addEventListener('lightLevel', function(event) {
+	    // Get the ambient light level in lux.
+	    var lightLevel = event.value;
+
+	    $('.lightLevel').text('lightLevel : ' + lon);
 	    socket.emit('update lightLevel', lightLevel);
 	    console.log('update lightLevel', lightLevel);
 	});
@@ -98,7 +126,7 @@
 	    // The device proximity (in cm).
 	    var proximity = event.value;
 
-	    $('h5').text(max + ' : ' + min + ' : ' + proximity);
+	    $('.deviceproximity').text(max + ' : ' + min + ' : ' + proximity);
 	    socket.emit('update deviceproximity', {max: max, min: min, proximity: proximity});
 	    console.log('update deviceproximity', {max: max, min: min, proximity: proximity});
 	});
@@ -106,9 +134,9 @@
 	// An event listener for a UserProximityEvent.
 	window.addEventListener('userproximity', function(event) {
 	    if (event.near) {
-	        // Do something.
-	    } else {
-	        // Do something else.
+	        $('.userproximity').text(event.near);
+		    socket.emit('update userproximity', event.near);
+		    console.log('update userproximity', event.near);
 	    }
 	});
 	
@@ -155,7 +183,7 @@
 
 	//Send updated position data
 	function deviceOrientationHandler(tiltLR, tiltFB, dir, motionUD) {
-			$('h2').text(tiltLR + ' : ' + tiltFB + ' : ' + dir + ' : ' + motionUD);
+			$('.orientation').text(tiltLR + ' : ' + tiltFB + ' : ' + dir + ' : ' + motionUD);
 			socket.emit('update movement', { tilt_LR: Math.round(tiltLR), tilt_FB: Math.round(tiltFB)});
 	}
 })();
