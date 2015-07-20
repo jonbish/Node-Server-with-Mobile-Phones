@@ -23,7 +23,7 @@
     });
 
     socket.on("update players", function(playersArray){
-      console.log('update players');
+      console.log('update players', players.length);
       players = playersArray;
     });
 
