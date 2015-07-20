@@ -20,7 +20,6 @@
 <script src="/socket.io/socket.io.js"></script>
 
 <script language="javascript" type="text/javascript">
-(function(){
   var socket = io.connect(baseURL+":8080");
   var roomURL = baseURL+":8080/mobile.html";
   // socket.emit('new room', { room: roomId});
@@ -115,7 +114,7 @@
       }
     }
   });
-})();
+
   function sync() {
     socket.emit('update players', players);
   }
