@@ -3,6 +3,7 @@
   var app = express();
   var server = require('http').Server(app);
   var io = require('socket.io')(server);
+  
   var players = [];
 
   app.use(express.static('public'));
@@ -18,12 +19,12 @@
     });
 
     socket.on("connect desktop", function(){
-      console.log('update desktop');
+      console.log('update desktop', players.length);
       socket.broadcast.emit('update desktop', players);
     });
 
     socket.on("update players", function(playersArray){
-      console.log('update players', players.length);
+      console.log('update players', playersArray.length);
       players = playersArray;
     });
 
