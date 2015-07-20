@@ -30,12 +30,12 @@
   socket.emit('connect desktop');
 
   socket.on('update desktop', function(playersArray){
-      console.log('update desktop: ' + playersArray);
+      console.log('update desktop', playersArray);
       players = playersArray;
   });
 
   socket.on('add user', function(socketID){
-      $('#status').text(players.length + ' players');
+      $('#status').text((players.length + 1) + ' players');
       console.log('New Player: ' + socketID);
       players.push(new player(socketID));
       sync();
